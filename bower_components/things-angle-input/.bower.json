@@ -1,0 +1,36 @@
+{
+  "name": "things-angle-input",
+  "version": "1.0.2",
+  "authors": [
+    "Hatio Lab. <heartyoh@hatiolab.com>"
+  ],
+  "description": "An element providing a degree value angle input element to convert to radian value.",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "seed"
+  ],
+  "main": "things-angle-input.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/ThingsElements/seed-element/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.2.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "^4.0.0"
+  },
+  "_release": "1.0.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.0.2",
+    "commit": "09ebb46871aa3d7228fdcf1d0e933dc2929e2e16"
+  },
+  "_source": "git://github.com/ThingsElements/things-angle-input.git",
+  "_target": "*",
+  "_originalSource": "ThingsElements/things-angle-input"
+}

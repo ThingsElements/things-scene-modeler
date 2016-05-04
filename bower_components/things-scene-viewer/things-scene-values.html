@@ -1,0 +1,87 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-input/paper-input.html">
+
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <things-scene-viewer id="scene"
+                           model="[[model]]"
+                           values="[[values]]"
+                           variables="{{variables}}"
+                           mode="0">
+    </things-scene-viewer>
+    
+Example:
+
+    <things-scene-values variables-model="[[variables]]"
+                         values="{{values}}">
+    </things-scene-values>
+
+@demo demo/index-values.html
+@hero hero.svg
+-->
+
+<dom-module id="things-scene-values">
+  <template>
+    <style>
+      :host {
+        @apply(--things-scene-values);
+      }
+
+      paper-input {
+        @apply(--things-scene-values-input);
+      }
+    </style>
+
+    <template is="dom-repeat" items="[[variablesModel]]">
+      <paper-input label="[[item.name]]"
+                   always-float-label
+                   placeholder="[[item.name]]"
+                   data-variable$="[[item.key]]"
+                   value="[[item.value]]">
+      </paper-input>
+    </template>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'things-scene-values',
+
+        properties: {
+          variableModel: {
+            type: Object
+          },
+          values: {
+            type: Object,
+            notify: true
+          }
+        },
+
+        listeners: {
+          'change': '_onValueChanged'
+        },
+
+        _onValueChanged: function(e) {
+          var input = e.target;
+
+          while (!input.hasAttribute('data-variable') && input !== document.body)
+            input = input.parentElement;
+
+          var variable = input.getAttribute('data-variable')
+
+          if(typeof(variable) !== 'undefined') {
+            var values = {}
+            values[variable] = e.target.value
+            this.values = values
+          }
+        }
+      });
+    })();
+  </script>
+</dom-module>

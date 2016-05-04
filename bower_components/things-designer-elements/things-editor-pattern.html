@@ -1,0 +1,105 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <things-editor-pattern image="{{pattern.image}}"
+                           offset-x="{{pattern.offsetX}}"
+                           offset-y="{{pattern.offsetY}"
+                           width="{{pattern.width}}"
+                           height="{{pattern.height}}"
+                           fit-pattern="{{pattern.fit}}">
+    </things-editor-pattern>
+
+@demo demo/index-editor-pattern.html
+@hero hero.svg
+-->
+
+<dom-module id="things-editor-pattern">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <label>image</label>
+    <input type="text" value="{{image::change}}">
+    <label>offset-x</label>
+    <input type="number" value="{{offsetX::change}}">
+    <label>offset-y</label>
+    <input type="number" value="{{offsetY::change}}">
+    <label>width</label>
+    <input type="number" value="{{width::change}}">
+    <label>height</label>
+    <input type="number" value="{{height::change}}">
+    <label>align</label>
+    <select class="select-content" value="{{align::change}}">
+      <option value="left-top">Left Top</option>
+      <option value="top">Top</option>
+      <option value="right-top">Right Top</option>
+      <option value="left">Left</option>
+      <option value="center">Center</option>
+      <option value="right">Right</option>
+      <option value="left-bottom">Left Bottom</option>
+      <option value="bottom">Bottom</option>
+      <option value="right-bottom">Right Bottom</option>
+    </select>
+    <div>
+      <input type="checkbox" checked="{{fitPattern::change}}" required>Fit
+    </div>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'things-editor-pattern',
+
+        properties: {
+          image: {
+            type: String,
+            notify: true
+          },
+
+          offsetX: {
+            type: Number,
+            notify: true
+          },
+
+          offsetY: {
+            type: Number,
+            notify: true
+          },
+
+          width: {
+            type: Number,
+            notify: true
+          },
+
+          height: {
+            type: Number,
+            notify: true
+          },
+
+          align: {
+            type: String,
+            notify: true
+          },
+
+          fitPattern: {
+            type: Boolean,
+            notify: true
+          }
+        }
+
+      })
+
+    })();
+
+  </script>
+</dom-module>

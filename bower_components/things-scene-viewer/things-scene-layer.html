@@ -1,0 +1,67 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <things-scene-viewer>
+      <things-scene-layer type="shift-layer"/>
+      <things-scene-layer type="confidential-overlay" model="[[confidential]]"/>
+    </things-scene-viewer>
+
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="things-scene-layer">
+  <template>
+    <content select="things-scene-property"></content>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'things-scene-layer',
+
+      properties: {
+        type: String,
+        model: {
+          type: Object,
+          notify: true
+        }
+      },
+
+      attached: function() {
+        var model = {
+          type: this.type
+        }
+
+        model = Array.from(this.querySelectorAll('things-scene-property'))
+        .reduce(function(model, property) {
+          var name = property.getAttribute('name')
+          var value = property.getAttribute('value')
+
+          if(name)
+            model[name] = value
+
+          return model
+        }, model)
+
+        model.__host__ = this
+
+        this.model = model
+      }
+
+    });
+  </script>
+</dom-module>

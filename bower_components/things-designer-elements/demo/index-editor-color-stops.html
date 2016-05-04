@@ -1,0 +1,79 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>things-editor-color-stops Demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+
+    <link rel="import" href="../things-editor-color-stops.html">
+
+  </head>
+  <body unresolved>
+
+    <template is="dom-bind" id="app">
+      <style is="custom-style">
+      :root {
+        --things-editor-color-stops: {
+          background: lightgray;
+        }
+      };
+
+      </style>
+
+      <p>An example of <code>&lt;things-editor-color-stops&gt;</code>:</p>
+
+      <p>Solid</p>
+
+      <things-editor-color-stops id="editor1"
+                                 type="solid"
+                                 color-stops="{{colorStops}}">
+      </things-editor-color-stops>
+
+      <p>Gradient</p>
+
+      <things-editor-color-stops id="editor2"
+                                 type="gradient"
+                                 color-stops="{{colorStops}}">
+      </things-editor-color-stops>
+
+    </template>
+
+    <script>
+      window.addEventListener('WebComponentsReady', function(e) {
+        var app = document.querySelector('#app')
+
+        app.colorStops = [{
+          color: 'blue',
+          position: 0
+        }, {
+          color: 'green',
+          position: 0.25
+        }, {
+          color: 'yellow',
+          position: 0.5
+        }, {
+          color: 'red',
+          position: 0.75
+        }, {
+          color: 'black',
+          position: 1
+        }]
+
+        app.$.editor1.addEventListener('change', function() {
+          console.log(app.colorStops)
+        })
+      })
+    </script>
+
+  </body>
+</html>

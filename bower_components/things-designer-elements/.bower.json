@@ -1,0 +1,41 @@
+{
+  "name": "things-designer-elements",
+  "version": "0.0.16",
+  "authors": [
+    "Hatio Lab. <heartyoh@hatiolab.com>"
+  ],
+  "description": "An element providing a solution to no problem in particular.",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "seed"
+  ],
+  "main": "things-designer-elements.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/ThingsElements/things-designer-elements",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.2.0",
+    "iron-elements": "PolymerElements/iron-elements#^1.0.0",
+    "paper-elements": "PolymerElements/paper-elements#^1.0.1",
+    "things-angle-input": "ThingsElements/things-angle-input",
+    "juicy-ace-editor": "^1.1.1"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "things-scene": "^0.5.2"
+  },
+  "_release": "0.0.16",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.0.16",
+    "commit": "29601eb3e547f954822ea00d6410f59440455cc8"
+  },
+  "_source": "git://github.com/ThingsElements/things-designer-elements.git",
+  "_target": "*",
+  "_originalSource": "ThingsElements/things-designer-elements"
+}

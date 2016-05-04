@@ -1,0 +1,214 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <things-scene-viewer scene="{{scene}}"
+                         model="[[model]]"
+                         selected="{{selected}}">
+      <things-scene-layer type="selection-layer"></things-scene-layer>
+      <things-scene-layer type="modeling-layer"></things-scene-layer>
+      <things-scene-handler type="text-editor"></things-scene-handler>
+      <things-scene-handler type="move-handler"></things-scene-handler>
+    </things-scene-viewer>
+
+    <things-scene-properties scene="[[scene]]"
+                             selected="[[selected]]"
+                             model="{{target}}"
+                             bounds="{{bounds}}">
+      <label>Center X</label>
+      <input type="number" value-as-number="{{target.cx::change}}">
+      <label>Width</label>
+      <input type="number" value-as-number="{{bounds.width::change}}">
+    </things-scene-properties>
+
+@demo demo/index-scene-properties.html
+@hero hero.svg
+-->
+
+<dom-module id="things-scene-properties">
+  <template>
+    <style>
+      :host {
+      }
+    </style>
+
+    <content></content>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'things-scene-properties',
+
+      properties: {
+        scene: {
+          type: Object
+        },
+
+        selected: {
+          type: Array,
+          observer: '_onSelectedChanged'
+        },
+
+        bounds: {
+          type: Object,
+          notify: true
+        },
+
+        propertyTarget: {
+          type: Object,
+          observer: '_onPropertyTargetChanged'
+        },
+
+        model: {
+          type: Object,
+          notify: true
+        }
+      },
+
+      observers: [
+        '_onSceneChanged(scene)',
+        '_onModelChanged(model.*)',
+        '_onBoundsChanged(bounds.*)'
+      ],
+
+      ready: function() {
+        this.current = 0
+      },
+
+      _defaultPropertyTarget: function() {
+        if(!this.scene) {
+          this.propertyTarget = null
+          this.model = {}
+          this.bounds = {}
+
+        } else {
+          this.propertyTarget = this.scene.root
+          this.model = JSON.parse(JSON.stringify(this.propertyTarget.hierarchy))
+          this.bounds = this.propertyTarget.bounds
+        }
+      },
+
+      _onSceneChanged: function() {
+        this._defaultPropertyTarget()
+      },
+
+      _onModelChanged: function(change) {
+
+        /* 사용자가 선택한 컴포넌트가 바뀐 경우도 호출되므로, 이 경우는 제외한다. */
+        if(change.path === 'model' || this.changedByScene)
+          return
+
+        var self = this
+
+        if(this.propertyTarget) {
+          this.scene.undoableChange(function() {
+            self.propertyTarget.set(change.path.substr(6), change.value)
+          })
+          return
+        }
+
+        /* 여러 컴포넌트의 경우에 적용 */
+        this.scene.undoableChange(function() {
+          self.selected.forEach(function(component) {
+            component.set(change.path.substr(6), change.value)
+          })
+        })
+      },
+
+      _onBoundsChanged: function(change) {
+        /* 사용자가 선택한 컴포넌트가 바뀐 경우도 호출되므로, 이 경우는 제외한다. */
+        if(change.path === 'bounds' || this.changedByScene)
+          return
+
+        var self = this
+
+        if(this.propertyTarget) {
+
+          this.scene.undoableChange(function() {
+            self.propertyTarget.bounds = self.bounds
+          })
+
+          this.changedByScene = true
+          this.bounds = this.propertyTarget.bounds
+          this.changedByScene = false
+
+          return
+        }
+
+        /* 여러 컴포넌트의 경우에 적용 */
+        this.changedByScene = true
+
+        var bounds = {}
+        bounds[change.path.substr(7)] = change.value
+
+        this.scene.undoableChange(function() {
+          self.selected.forEach(function(component) {
+            component.bounds = Object.assign(component.bounds, bounds)
+          })
+        })
+
+        this.changedByScene = false
+      },
+
+      _onModelChangedB: function(before, after) {
+
+        this.changedByScene = true
+
+        for(var property in after) {
+          if(property)
+            this.set('model.' + property, after[property])
+        }
+
+        this.bounds = this.propertyTarget.bounds
+
+        this.changedByScene = false
+      },
+
+      _onSelectedChanged: function(after, before) {
+
+        if(after.length == 1) {
+
+          this.propertyTarget = after[0]
+          this.model = JSON.parse(JSON.stringify(this.propertyTarget.hierarchy))
+          this.bounds = this.propertyTarget.bounds
+
+        } else if(after.length == 0) { // 선택이 안된 경우
+
+          this._defaultPropertyTarget()
+        } else { // 다중 선택된 경우
+
+          this.propertyTarget = null
+          this.model = {
+            alpha: 1
+          }
+          this.bounds = {}
+        }
+      },
+
+      _onPropertyTargetChanged: function(after, before) {
+        if(before) {
+          before.off('change', this._onModelChangedB, this)
+        }
+        if(after) {
+          after.on('change', this._onModelChangedB, this)
+        }
+      }
+
+    })
+  </script>
+</dom-module>
+

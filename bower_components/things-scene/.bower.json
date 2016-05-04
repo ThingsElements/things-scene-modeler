@@ -1,0 +1,51 @@
+{
+  "name": "things-scene",
+  "description": "2D graphic library",
+  "main": "things-scene-min.js",
+  "authors": [
+    "heartyoh@hatiolab.com"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "2D",
+    "graphic",
+    "library",
+    "canvas"
+  ],
+  "homepage": "https://github.com/heartyoh/things-scene",
+  "moduleType": [
+    "globals",
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "src",
+    "lib",
+    "DEPLOYMENT.md",
+    "DEVELOPMENT.md",
+    "things-scene.js"
+  ],
+  "dependencies": {
+    "bwip": "^0.7.1",
+    "things-zpl": "^0.1.19"
+  },
+  "devDependencies": {
+    "stomp-websocket": "^2.3.4",
+    "faye": "^1.1.0",
+    "sockjs": "^0.3.4"
+  },
+  "version": "0.5.2",
+  "_release": "0.5.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.5.2",
+    "commit": "2c2ce5165c4ed63d35f69cd560bee2cb296b671a"
+  },
+  "_source": "https://github.com/heartyoh/things-scene.git",
+  "_target": "^0.5.0",
+  "_originalSource": "things-scene"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "things-zpl",
+  "version": "0.1.19",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel src -d lib",
+    "watcher": "watchify --extension=js -o things-zpl.js index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heartyoh/things-zpl.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/heartyoh/things-zpl/issues"
+  },
+  "homepage": "https://github.com/heartyoh/things-zpl#readme",
+  "devDependencies": {
+    "babel-cli": "^6.3.17",
+    "watchify": "^3.3.1"
+  },
+  "dependencies": {
+    "image-size": "^0.5.0"
+  }
+}

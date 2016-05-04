@@ -1,0 +1,66 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>things-editor-pattern Demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../things-editor-pattern.html">
+
+    <style is="custom-style">
+    :root {
+    };
+
+    #target {
+      width: 300px;
+      height: 300px;
+      background-image: url("http://img.naver.net/static/www/u/2013/0731/nmms_224940510.gif");
+      background-repeat: repeat-y;
+    }
+    </style>
+  </head>
+  <body unresolved>
+
+    <template is="dom-bind" id="app">
+      <p>An example of <code>&lt;things-editor-pattern&gt;</code>:</p>
+
+      <div id="target"></div>
+
+      <things-editor-pattern id="editor"
+                             image="{{pattern.image}}"
+                             offset-x="{{pattern.offsetX}}"
+                             offset-y="{{pattern.offsetY}"
+                             width="{{pattern.width}}"
+                             height="{{pattern.height}}"
+                             align="{{pattern.align}}"
+                             fitPattern="{{pattern.fitPattern}}">
+      </things-editor-pattern>
+
+    </template>
+
+    <script>
+      window.addEventListener('WebComponentsReady', function(e) {
+        var app = document.querySelector('#app')
+
+        app.pattern = {
+          image: "http://img.naver.net/static/www/u/2013/0731/nmms_224940510.gif"
+        }
+
+        app.$.editor.addEventListener('change', function() {
+          console.log(app.pattern)
+          app.$.target.style['background-image'] = 'url(' + app.pattern.image + ')'
+        })
+      })
+    </script>
+
+  </body>
+</html>

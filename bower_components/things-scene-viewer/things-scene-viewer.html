@@ -1,0 +1,235 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
+
+<link rel="import" href="./things-scene-layer.html">
+<link rel="import" href="./things-scene-handler.html">
+
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <things-scene-viewer></things-scene-viewer>
+
+Example:
+
+    <things-scene-viewer>
+      <things-scene-layer type="shift-layer"/>
+      <things-scene-layer type="confidential-overlay" model="[[confidential]]"/>
+    </things-scene-viewer>
+
+@demo demo/index.html
+@demo demo/index-value.html
+@hero hero.svg
+-->
+
+<dom-module id="things-scene-viewer">
+  <template>
+    <style>
+      :host {
+        @apply(--things-scene-viewer);
+      }
+    </style>
+
+    <content></content>
+
+  </template>
+
+  <script src="../bwip/bwip-min.js"></script>
+  <script src="../things-scene/things-scene-min.js"></script>
+
+  <script>
+    Polymer({
+      is: 'things-scene-viewer',
+
+      behaviors: [
+        Polymer.IronResizableBehavior
+      ],
+
+      properties: {
+        scene: {
+          type: Object,
+          notify: true
+        },
+        model: {
+          type: Object
+        },
+        mode: {
+          /* mode 0 : view mode, mode 1 : edit mode, mode 2 : shift mode */
+          type: Number,
+          notify: true,
+          value: 2
+        },
+        dppx: {
+          type: Number
+        },
+        screenSize: {
+          type: Number
+        },
+        variables: {
+          type: Object,
+          notify: true
+        },
+        values: {
+          type: Object
+        },
+        fit: {
+          type: Boolean,
+          value: false
+        },
+        selected: {
+          type: Array,
+          notify: true
+        },
+        disposeWhenDetached: {
+          type: Boolean,
+          value: true
+        }
+      },
+
+      listeners: {
+        'iron-resize': '_onIronResize',
+      },
+
+      observers: [
+        "_onModelChanged(model)",
+        "_onModeChanged(mode)",
+        "_onDisplayChanged(dppx, screenSize)",
+        "_onValuesChanged(values)"
+      ],
+
+      ready: function() {
+      },
+
+      attached: function() {
+        this.async(this.notifyResize, 1);
+      },
+      
+      detached: function() {
+        if(this.scene && this.disposeWhenDetached)
+          this.scene.dispose()
+      },
+
+      findAll: function(selector) {
+        return this.scene.findAll(selector)
+      },
+
+      _onIronResize: function(e) {
+        if(this.scene) {
+          this.scene.resize()
+          if(this.fit)
+            this._fitSize()
+        }
+      },
+
+      _onModelChanged: function(model) {
+        if(this.scene) {
+          this.scene.off('selected', this._onSelectedChanged, this)
+          this.scene.off('mode', this._onSceneModeChanged, this)
+          this.scene.dispose()
+        }
+
+        if(!model) {
+          this.scene = null
+          return
+        }
+
+        var layers = Array.from(this.querySelectorAll('things-scene-layer'))
+        .map(function(layer) {
+          return layer.model
+        })
+
+        var handlers = Array.from(this.querySelectorAll('things-scene-handler'))
+        .map(function(handler) {
+          return handler.getAttribute('type')
+        })
+
+        this.scene = scene.create({
+          target: this,
+          model: model,
+          layers: layers,
+          handlers: handlers
+        });
+
+        if(this.fit)
+          this._fitSize()
+
+        this.variables = model.variables
+
+        this.scene.on('selected', this._onSelectedChanged, this)
+        this.scene.on('mode', this._onSceneModeChanged, this)
+
+        this._onModeChanged(this.mode)
+        this._onDisplayChanged(this.dppx, this.screenSize)
+      },
+
+      _onDisplayChanged: function(dppx, screenSize) {
+        if(!this.scene)
+          return
+
+        if(screenSize)
+          this.scene.screen = parseFloat(screenSize)
+        if(dppx)
+          this.scene.dppx = parseFloat(dppx)
+      },
+
+      _onModeChanged: function(mode) {
+        if(!this.scene)
+          return
+
+        if(this.scene.mode !== parseFloat(mode))
+          this.scene.mode = parseFloat(mode)
+      },
+
+      _onValuesChanged: function(values) {
+        if(!this.scene || !values)
+          return
+
+        for(var key in values)
+          this.scene.variable(key, values[key])
+      },
+
+      _fitSize: function() {
+        if(!this.scene)
+          return
+
+        var width = this.model.width, height = this.model.height
+        var vw = this.offsetWidth, vh = this.offsetHeight
+
+        var dpr = window.devicePixelRatio || 1
+        this.scene.scale = {
+          x: vw / width * dpr,
+          y: vh / height * dpr
+        }
+      },
+
+      _onSelectedChanged: function(before, after) {
+        this.selected = after
+      },
+
+      _onSceneModeChanged: function(after, before) {
+        if(!this.scene)
+          return
+
+        if(this.mode != after)
+          this.mode = after
+
+        if(after === 2)
+          this.style.cursor = "all-scroll"
+        else
+          this.style.cursor = null
+      }
+
+    });
+  </script>
+</dom-module>
