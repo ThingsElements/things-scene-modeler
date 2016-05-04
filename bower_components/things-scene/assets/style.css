@@ -1,9 +1,0 @@
-*{margin:0;padding:0;font-family:tahoma}
-ol,ul{list-style:none}
-.context-menu{min-width:150px;background:#fff;
-	-webkit-box-shadow:2px 2px 1px 1px rgba(0,0,0,.1);
-	box-shadow:2px 2px 1px 1px rgba(0,0,0,.1);
-}
-.context-menu li{border-bottom:1px solid rgba(0,0,0,.1);padding:3px 5px;}
-.context-menu li span{float:right;margin-top:3px;font-size:11px;color:#999}
-.context-menu li:hover{background:#efefef;}
