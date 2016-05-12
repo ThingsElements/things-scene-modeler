@@ -10,6 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../polymer/polymer.html">
 
+<link rel="import" href="../things-designer-elements/things-editor-property.html">
 <!--
 An element providing a solution to no problem in particular.
 
@@ -47,6 +48,14 @@ Example:
 
     <content></content>
 
+    <template is="dom-repeat" items="[[props]]">
+      <things-editor-property label="[[item.label]]"
+                              type="[[item.type]]"
+                              name$="[[item.name]]"
+                              property="[[item.property]]">
+      </things-editor-property>
+    </template>
+
   </template>
 
   <script>
@@ -76,7 +85,9 @@ Example:
         model: {
           type: Object,
           notify: true
-        }
+        },
+
+        props: Array
       },
 
       observers: [
@@ -84,6 +95,10 @@ Example:
         '_onModelChanged(model.*)',
         '_onBoundsChanged(bounds.*)'
       ],
+
+      listeners: {
+        'change': '_onValueChanged'
+      },
 
       _defaultPropertyTarget: function() {
         if(!this.scene) {
@@ -98,14 +113,50 @@ Example:
         }
       },
 
+      _setValue: function(name) {
+        var prop = this.querySelector('things-editor-property[name=' + name + ']')
+        if(!prop)
+          return
+
+        prop.value = this.model[name]
+      },
+
+      _setValues: function() {
+        var self = this
+        Array.from(this.querySelectorAll('things-editor-property')).forEach(function(prop) {
+          var name = prop.getAttribute('name')
+          prop.value = self.model[name]
+        })
+      },
+
+      _onValueChanged: function(e) {
+        var prop = e.target
+        while(prop && prop.tagName != 'THINGS-EDITOR-PROPERTY')
+          prop = prop.parentNode
+
+        if(!prop || prop.tagName != 'THINGS-EDITOR-PROPERTY')
+          return
+
+        var name = prop.getAttribute('name')
+
+        this._changedOnThis = true
+        this.set('model.' + name, prop.value)
+        this._changedOnThis = false
+      },
+
       _onSceneChanged: function() {
         this._defaultPropertyTarget()
       },
 
       _onModelChanged: function(change) {
 
+        if(change.path === 'model'){
+          this._setValues()
+          return
+        }
+
         /* 사용자가 선택한 컴포넌트가 바뀐 경우도 호출되므로, 이 경우는 제외한다. */
-        if(change.path === 'model' || this.changedByScene)
+        if(this.changedByScene)
           return
 
         var self = this
@@ -203,8 +254,6 @@ Example:
           after.on('change', this._onModelChangedB, this)
         }
       }
-
     })
   </script>
 </dom-module>
-
