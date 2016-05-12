@@ -19,7 +19,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <link rel="import" href="../../things-scene-viewer/things-scene-layer.html">
     <link rel="import" href="../../things-scene-viewer/things-scene-handler.html">
 
-    <link rel="import" href="../../things-designer-elements/things-designer-elements.html">
+    <link rel="import" href="../../things-designer-elements/elements.html">
     <link rel="import" href="../../things-scene-viewer/things-scene-viewer.html">
 
     <link rel="import" href="../things-scene-properties.html">
@@ -48,14 +48,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <things-scene-handler type="move-handler"></things-scene-handler>
       </things-scene-viewer>
 
-      <things-scene-properties scene="[[scene]]"
+      <things-scene-properties id="properties"
+                               scene="[[scene]]"
                                selected="[[selected]]"
                                model="{{target}}"
-                               bounds="{{bounds}}">
-        <label>Center X</label>
-        <input type="number" value-as-number="{{target.cx::change}}">
-        <label>Width</label>
-        <input type="number" value-as-number="{{bounds.width::change}}">
+                               bounds="{{bounds}}"
+                               props="{{props}}">
       </things-scene-properties>
 
     </template>
@@ -80,10 +78,64 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             value: 75,
             alpha: 0.8,
             text: "#{value}%"
-          }]             
-        }        
+          }]
+        }
+
+        var propEditors = [{
+          type: 'number',
+          label: 'Center X',
+          name: 'cx'
+        }, {
+          type: 'number',
+          label: 'Center Y',
+          name: 'cy'
+        }, {
+          type: 'number',
+          label: 'Radius X',
+          name: 'rx'
+        }, {
+          type: 'number',
+          label: 'Radius Y',
+          name: 'ry'
+        }, {
+          type: 'number',
+          label: 'Line Width',
+          name: 'lineWidth'
+        }, {
+          type: 'number',
+          label: 'Font Size',
+          name: 'fontSize'
+        }, {
+          type: 'number',
+          label: 'Top',
+          name: 'top'
+        }, {
+          type: 'color',
+          label: 'Stroke Style',
+          name: 'strokeStyle'
+        }, {
+          type: 'color',
+          label: 'Font Color',
+          name: 'fontColor'
+        }, {
+          type: 'number',
+          label: 'Alpha',
+          name: 'alpha',
+          property: 'number'
+        }, {
+          type: 'number',
+          label: 'Value',
+          name: 'value',
+          property: 'number'
+        }]
 
         app.model = model
+        app.props = propEditors
+
+
+        app.$.properties.addEventListener('change', function(e) {
+          console.log('change', e, app.$.properties.model)
+        })
       });
     </script>
 
