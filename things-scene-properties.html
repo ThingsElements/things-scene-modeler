@@ -91,6 +91,7 @@ Example:
       },
 
       observers: [
+        '_onPropsChanged(props)',
         '_onSceneChanged(scene)',
         '_onModelChanged(model.*)',
         '_onBoundsChanged(bounds.*)'
@@ -122,11 +123,23 @@ Example:
       },
 
       _setValues: function() {
+
         var self = this
         Array.from(this.querySelectorAll('things-editor-property')).forEach(function(prop) {
           var name = prop.getAttribute('name')
           prop.value = self.model[name]
         })
+
+      },
+
+      _onPropsChanged: function(change) {
+
+        if(this.changedByScene)
+          return;
+
+        this.async(function() {
+          this._setValues()
+        }, 1)
       },
 
       _onValueChanged: function(e) {
@@ -149,9 +162,180 @@ Example:
       },
 
       _onModelChanged: function(change) {
-
+        
         if(change.path === 'model'){
-          this._setValues()
+          this.changedByScene = true;
+
+          this.props = [];
+
+          // things-editor-property의 value 변경시 현재 타입에 대한 onValueChange가 아닌
+          // 마지막으로 dom에 생성되었던 타입의 것이 호출되는 현상때문 초기화 우선.
+          // 초기화 후 타이밍문제 해결을 위해 defer
+
+          this.async(function(){
+            // TODO: switch 이하를 모델에서 get 하도록.
+            switch (change.value.type) {
+              case 'ellipse':
+                this.props = [{
+                  type: 'number',
+                  label: 'Center X',
+                  name: 'cx'
+                }, {
+                  type: 'number',
+                  label: 'Center Y',
+                  name: 'cy'
+                }, {
+                  type: 'number',
+                  label: 'Radius X',
+                  name: 'rx'
+                }, {
+                  type: 'number',
+                  label: 'Radius Y',
+                  name: 'ry'
+                }, {
+                  type: 'number',
+                  label: 'Line Width',
+                  name: 'lineWidth'
+                }, {
+                  type: 'number',
+                  label: 'Font Size',
+                  name: 'fontSize'
+                }, {
+                  type: 'number',
+                  label: 'Top',
+                  name: 'top'
+                }, {
+                  type: 'color',
+                  label: 'Stroke Style',
+                  name: 'strokeStyle'
+                }, {
+                  type: 'color',
+                  label: 'Font Color',
+                  name: 'fontColor'
+                }, {
+                  type: 'number',
+                  label: 'Alpha',
+                  name: 'alpha',
+                  property: 'number'
+                }, {
+                  type: 'number',
+                  label: 'Value',
+                  name: 'value',
+                  property: 'number'
+                }];
+                break;
+              case 'gauge-circle' :
+                this.props = [{
+                  type: 'number',
+                  label: 'Value',
+                  name: 'value',
+                  property: 'number'
+                }, {
+                  type: 'number',
+                  label: 'StartValue',
+                  name: 'startValue',
+                  property: 'number'
+                }, {
+                  type: 'checkbox',
+                  label: 'ShowStartValue',
+                  name: 'showStartValue',
+                  property: 'checkbox'
+                }, {
+                  type: 'number',
+                  label: 'EndValue',
+                  name: 'endValue',
+                  property: 'number'
+                }, {
+                  type: 'checkbox',
+                  label: 'ShowEndValue',
+                  name: 'showEndValue',
+                  property: 'checkbox'
+                }, {
+                  type: 'number',
+                  label: 'Step',
+                  name: 'step',
+                  property: 'number'
+                }, {
+                  type: 'checkbox',
+                  label: 'ShowStepLine',
+                  name: 'showStepLine',
+                  property: 'checkbox'
+                }, {
+                  type: 'checkbox',
+                  label: 'ShowStepText',
+                  name: 'showStepText',
+                  property: 'checkbox'
+                }, {
+                  type: 'number',
+                  label: 'SubTextSize',
+                  name: 'subTextSize',
+                  property: 'number'
+                }, {
+                  type: 'number',
+                  label: 'SubStep',
+                  name: 'subStep',
+                  property: 'number'
+                }, {
+                  type: 'checkbox',
+                  label: 'ShowSubStep',
+                  name: 'showSubStep',
+                  property: 'checkbox'
+                }, {
+                  type: 'number',
+                  label: 'StepNeedleSize',
+                  name: 'stepNeedleSize',
+                  property: 'number'
+                }, {
+                  type: 'number',
+                  label: 'StartAngle',
+                  name: 'startAngle',
+                  property: 'number'
+                }, {
+                  type: 'number',
+                  label: 'EndAngle',
+                  name: 'endAngle',
+                  property: 'number'
+                }, {
+                  type: 'color',
+                  label: 'TextFillStyle',
+                  name: 'textFillStyle',
+                  property: 'color'
+                }, {
+                  type: 'color',
+                  label: 'NeedleFillStyle',
+                  name: 'needleFillStyle',
+                  property: 'color'
+                }, {
+                  type: 'color',
+                  label: 'InnerCircleFillStyle',
+                  name: 'innerCircleFillStyle',
+                  property: 'color'
+                }, {
+                  type: 'color',
+                  label: 'StepFillStyle',
+                  name: 'stepFillStyle',
+                  property: 'color'
+                }, {
+                  type: 'solid-color-stops',
+                  label: 'COLOR STOPS',
+                  name: 'colorStops',
+                  property: {
+                    min: 0,
+                    max: 240
+                  }
+                }]
+                break;
+
+              default:
+                this.props = []
+            }
+          }, 1)
+
+
+          this.changedByScene = false;
+          this.async(function(){
+            this._setValues();
+          }, 1)
           return
         }
 

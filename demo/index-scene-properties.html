@@ -21,6 +21,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <link rel="import" href="../../things-designer-elements/elements.html">
     <link rel="import" href="../../things-scene-viewer/things-scene-viewer.html">
+    <link rel="import" href="../../things-scene-gauge/things-scene-gauge.html">
 
     <link rel="import" href="../things-scene-properties.html">
 
@@ -66,9 +67,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           width: 500,
           height: 500,
           components: [{
+            type: 'gauge-circle',
+            cx: 100,
+            cy: 100,
+            rx: 70,
+            ry: 70,
+            fontSize: 20,
+            fillStyle: '#ff00ff',
+            fontColor: '#FF0000',
+            lineWidth: 10,
+            startAngle: 0,
+            endAngle: 230,
+            value: 65,
+            startValue: 00,
+            endValue: 240,
+            step: 20,
+            fontColor: 'black',
+            colorStops:[
+              { position:30,
+                color: '#00ff00'},
+              { position: 100,
+                color: '#ffff00'},
+              { position: 220,
+                color: '#ff0000'}],
+            textFillStyle: 'blue',
+            stepFillStyle: 'gray',
+            needleFillStyle: 'red',
+            ratio: 70,
+            subStep: 2,
+            subTextSize: 5,
+            strokeStyle: 'black',
+            text: '#{value}%'
+          }, {
             type: 'ellipse',
-            cx: 200,
-            cy: 200,
+            cx: 250,
+            cy: 300,
             rx: 150,
             ry: 150,
             fontSize: 80,
@@ -78,56 +111,71 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             value: 75,
             alpha: 0.8,
             text: "#{value}%"
+          }, {
+            type: 'ellipse',
+            cx: 500,
+            cy: 200,
+            rx: 50,
+            ry: 50,
+            fontSize: 20,
+            strokeStyle: '#552555',
+            fontColor: '#FF0000',
+            lineWidth: 10,
+            value: 75,
+            alpha: 0.8,
+            text: "#{value}%"
           }]
         }
 
-        var propEditors = [{
-          type: 'number',
-          label: 'Center X',
-          name: 'cx'
-        }, {
-          type: 'number',
-          label: 'Center Y',
-          name: 'cy'
-        }, {
-          type: 'number',
-          label: 'Radius X',
-          name: 'rx'
-        }, {
-          type: 'number',
-          label: 'Radius Y',
-          name: 'ry'
-        }, {
-          type: 'number',
-          label: 'Line Width',
-          name: 'lineWidth'
-        }, {
-          type: 'number',
-          label: 'Font Size',
-          name: 'fontSize'
-        }, {
-          type: 'number',
-          label: 'Top',
-          name: 'top'
-        }, {
-          type: 'color',
-          label: 'Stroke Style',
-          name: 'strokeStyle'
-        }, {
-          type: 'color',
-          label: 'Font Color',
-          name: 'fontColor'
-        }, {
-          type: 'number',
-          label: 'Alpha',
-          name: 'alpha',
-          property: 'number'
-        }, {
-          type: 'number',
-          label: 'Value',
-          name: 'value',
-          property: 'number'
-        }]
+        var propEditors = [
+          // {
+          //   type: 'number',
+          //   label: 'Center X',
+          //   name: 'cx'
+          // }, {
+          //   type: 'number',
+          //   label: 'Center Y',
+          //   name: 'cy'
+          // }, {
+          //   type: 'number',
+          //   label: 'Radius X',
+          //   name: 'rx'
+          // }, {
+          //   type: 'number',
+          //   label: 'Radius Y',
+          //   name: 'ry'
+          // }, {
+          //   type: 'number',
+          //   label: 'Line Width',
+          //   name: 'lineWidth'
+          // }, {
+          //   type: 'number',
+          //   label: 'Font Size',
+          //   name: 'fontSize'
+          // }, {
+          //   type: 'number',
+          //   label: 'Top',
+          //   name: 'top'
+          // }, {
+          //   type: 'color',
+          //   label: 'Stroke Style',
+          //   name: 'strokeStyle'
+          // }, {
+          //   type: 'color',
+          //   label: 'Font Color',
+          //   name: 'fontColor'
+          // }, {
+          //   type: 'number',
+          //   label: 'Alpha',
+          //   name: 'alpha',
+          //   property: 'number'
+          // }, {
+          //   type: 'number',
+          //   label: 'Value',
+          //   name: 'value',
+          //   property: 'number'
+          // }
+        ]
 
         app.model = model
         app.props = propEditors
